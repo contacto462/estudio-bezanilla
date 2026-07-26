@@ -384,10 +384,24 @@
     .industria-item:hover .icon{transform:translateY(-3px);color:var(--gold);}
   }
 
+  /* Botón de menú: oculto en escritorio */
+  .nav-toggle{
+    display:none;
+    width:44px;height:44px;margin-right:-10px;
+    background:none;border:0;cursor:pointer;color:#fff;
+    position:relative;z-index:120;
+  }
+  .nav-toggle span{
+    display:block;width:24px;height:1px;background:currentColor;margin:0 auto;
+    transition:transform .3s var(--ease-out), opacity .2s ease;
+  }
+  .nav-toggle span + span{margin-top:7px;}
+  body.menu-open .nav-toggle span:first-child{transform:translateY(4px) rotate(45deg);}
+  body.menu-open .nav-toggle span:last-child{transform:translateY(-4px) rotate(-45deg);}
+
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 1000px){
-    /* El menú se envuelve en dos filas: la línea deslizante no aplica,
-       el ítem activo se marca en su lugar */
+    /* Sin espacio para la línea deslizante: el activo se marca en su lugar */
     .nav-indicator{display:none;}
     .site-nav a.active{box-shadow:0 1px 0 var(--gold);}
     .values-grid{grid-template-columns:1fr 1fr;gap:36px 0;}
@@ -398,25 +412,109 @@
     .areas-grid{grid-template-columns:1fr 1fr;}
     .industrias-grid{grid-template-columns:repeat(4,1fr);row-gap:32px;}
   }
-  @media (max-width: 700px){
+
+  /* ---------- MÓVIL ---------- */
+  @media (max-width: 820px){
     .container{padding-left:24px;padding-right:24px;}
-    .areas-grid{grid-template-columns:1fr;}
-    .industrias-grid{grid-template-columns:repeat(2,1fr);}
-    .site-header{padding:22px 24px;gap:16px;}
-    .site-nav ul{gap:20px;}
-    .hero{min-height:auto;}
-    .hero-content{padding:170px 24px 80px;}
-    .hero::before{background-position:70% center;}
-    .hero::after{
-      background:linear-gradient(180deg, rgba(11,26,46,0.94) 0%, rgba(11,26,46,0.86) 55%, rgba(17,28,41,0.96) 100%);
+
+    /* Cabecera: logo + botón, el menú pasa a pantalla completa */
+    .site-header{padding:18px 24px;flex-wrap:nowrap;gap:16px;}
+    .logo-block .logo{font-size:1.05rem;letter-spacing:2px;}
+    .logo-block .tagline{font-size:0.52rem;letter-spacing:1.5px;}
+    .nav-toggle{display:block;}
+    .site-nav{
+      position:fixed;inset:0;z-index:90;
+      background:rgba(9,22,40,0.98);
+      -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+      display:flex;align-items:center;
+      padding:0 24px;
+      opacity:0;visibility:hidden;transform:translateY(-10px);
+      transition:opacity .3s ease, transform .35s var(--ease-out), visibility .35s;
     }
-    .values,.cta{padding:64px 24px;}
-    .nosotros{padding:80px 24px;}
-    .areas{padding:60px 24px;}
-    .industrias{padding:50px 24px;}
+    body.menu-open{overflow:hidden;}
+    body.menu-open .site-nav{opacity:1;visibility:visible;transform:none;}
+    .site-nav ul{flex-direction:column;align-items:flex-start;gap:0;width:100%;}
+    .site-nav li{width:100%;border-bottom:1px solid var(--hairline-light);}
+    .site-nav li:first-child{border-top:1px solid var(--hairline-light);}
+    .site-nav a{
+      display:block;width:100%;
+      font-size:0.95rem;letter-spacing:2.4px;
+      padding:22px 0;color:rgba(255,255,255,0.78);
+    }
+    .site-nav a.active{color:#fff;box-shadow:none;}
+    .site-nav a.active::before{
+      content:"";position:absolute;left:-24px;top:50%;
+      width:3px;height:22px;margin-top:-11px;background:var(--gold);
+    }
+
+    /* Hero: la foto se mantiene, el velo pasa a ser vertical */
+    .hero{min-height:88svh;}
+    /* Más aire abajo que arriba: el bloque queda ópticamente centrado */
+    .hero-content{padding:112px 24px 96px;}
+    .hero::before{background-position:72% center;}
+    .hero::after{
+      background:linear-gradient(180deg,
+        rgba(9,22,40,0.92) 0%,
+        rgba(11,26,46,0.80) 45%,
+        rgba(13,30,50,0.86) 78%,
+        rgba(17,28,41,0.97) 100%);
+    }
+    .hero-content h1{
+      font-size:clamp(2.1rem,9vw,2.8rem);letter-spacing:-0.01em;
+      line-height:1.1;margin-bottom:22px;
+    }
+    .hero-rule{margin-bottom:22px;}
+    .hero-content p{font-size:1.12rem;margin-bottom:26px;}
+    .hero-location{font-size:0.66rem;letter-spacing:1.4px;}
+
+    /* Valores: una columna, separados por filetes horizontales */
+    .values{padding:52px 24px;}
     .values-grid{grid-template-columns:1fr;}
-    .value-item{padding:0;border-left:none;}
-    .site-footer{padding:0 24px 36px;}
+    .value-item{
+      padding:26px 0;border-left:none;
+      border-top:1px solid var(--hairline-light);
+    }
+    .value-item:first-child{padding-top:0;border-top:none;}
+    .value-item:last-child{padding-bottom:0;}
+
+    /* Nosotros */
+    .nosotros{padding:72px 24px;}
+    .nosotros-grid{gap:40px;}
+    .nosotros .eyebrow{font-size:1.05rem;letter-spacing:4px;margin-bottom:20px;}
+    .nosotros h2{font-size:1.6rem;}
+    .nosotros p{font-size:0.95rem;}
+    .nosotros-img{max-width:100%;}
+    .nosotros-img .slice{border-width:4px;}
+
+    /* Áreas: una columna con filetes, íconos algo menores */
+    .areas{padding:64px 0;}
+    .areas-grid{grid-template-columns:1fr;gap:0;margin-top:36px;}
+    .area-item{
+      padding:28px 0;border-top:1px solid var(--hairline);
+    }
+    .area-item:first-child{border-top:none;padding-top:0;}
+    .area-item .icon{width:32px;height:32px;margin-bottom:12px;}
+
+    /* Industrias */
+    .industrias{padding:56px 0;}
+    .industrias-grid{grid-template-columns:repeat(2,1fr);gap:34px 20px;}
+
+    /* Cierre y pie */
+    .cta{padding:56px 24px;}
+    .cta p{font-size:1.05rem;line-height:1.5;}
+    .site-footer{padding:0 24px 32px;}
+    .footer-inner{
+      flex-direction:column;align-items:flex-start;gap:26px;padding-top:32px;
+    }
+    .footer-contact{flex-direction:column;gap:12px;}
+  }
+
+  @media (max-width: 420px){
+    .logo-block .logo{font-size:0.95rem;letter-spacing:1.5px;}
+    .logo-block .tagline{font-size:0.48rem;letter-spacing:1px;}
+    .hero-content h1{font-size:2rem;}
+    .hero-content p{font-size:1.05rem;}
+    .industrias-grid{grid-template-columns:1fr;gap:26px;}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -433,7 +531,11 @@
       <div class="logo">ESTUDIO BEZANILLA</div>
       <div class="tagline">Derecho laboral empresarial</div>
     </div>
-    <nav class="site-nav" aria-label="Navegación principal">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú"
+            aria-expanded="false" aria-controls="menu-principal">
+      <span></span><span></span>
+    </button>
+    <nav class="site-nav" id="menu-principal" aria-label="Navegación principal">
       <ul>
         <li><a href="#inicio" class="active">Inicio</a></li>
         <li><a href="#nosotros">Nosotros</a></li>
@@ -620,6 +722,34 @@
   };
   onScroll();
   window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* ---- Menú móvil ---- */
+  var toggle = document.querySelector('.nav-toggle');
+  var body = document.body;
+
+  function setMenu(open){
+    body.classList.toggle('menu-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  }
+
+  toggle.addEventListener('click', function(){
+    setMenu(!body.classList.contains('menu-open'));
+  });
+
+  /* Al elegir una sección el panel se cierra solo */
+  document.querySelectorAll('.site-nav a').forEach(function(a){
+    a.addEventListener('click', function(){ setMenu(false); });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && body.classList.contains('menu-open')) setMenu(false);
+  });
+
+  /* Si se vuelve a escritorio con el menú abierto, se restablece el scroll */
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 820) setMenu(false);
+  });
 
   /* ---- Indicador de sección: la línea dorada sigue el scroll ---- */
   var nav = document.querySelector('.site-nav');
