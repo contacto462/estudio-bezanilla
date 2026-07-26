@@ -523,7 +523,9 @@
     .logo-block .tagline{font-size:0.48rem;letter-spacing:1px;}
     .hero-content h1{font-size:2rem;}
     .hero-content p{font-size:1.05rem;}
-    .industrias-grid{grid-template-columns:1fr;gap:26px;}
+    /* Se mantienen dos columnas: en una sola, la lista se vuelve interminable */
+    .industrias-grid{grid-template-columns:repeat(2,1fr);gap:30px 14px;}
+    .industria-item p{font-size:0.66rem;}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
