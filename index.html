@@ -16,7 +16,8 @@
     --navy:#1b2a3d;
     --navy-dark:#111c29;
     --navy-deep:#0b1a2e;
-    --gold:#c9a24a;
+    /* Bronce: único acento de la marca, en toda la página */
+    --gold:#8a6c2f;
     --gold-dim:#8a6c2f;
     --gray-bg:#f3f3f1;
     --text-dark:#1b2a3d;
@@ -65,8 +66,13 @@
     padding:30px 48px;
     background:transparent;
   }
-  /* El bloque toma el ancho del logo y la bajada se justifica a ese ancho */
-  .logo-block{display:inline-block;}
+  /* El bloque toma el ancho del logo y la bajada se justifica a ese ancho.
+     El marco usa el dorado de los íconos, con el grosor del tríptico. */
+  .site-header .logo-block{
+    display:inline-block;
+    border:2px solid var(--gold-dim);
+    padding:14px 20px 12px;
+  }
   .logo-block .logo{
     font-size:1.32rem;letter-spacing:3px;font-weight:400;color:#fff;
     white-space:nowrap;
@@ -325,14 +331,15 @@
   .footer-contact span,.footer-contact a{display:flex;align-items:center;gap:8px;}
   .footer-contact a{transition:color .25s ease;}
   .footer-contact a:hover{color:var(--gold);}
-  .footer-social{display:flex;gap:12px;}
+  .footer-social{display:flex;gap:22px;}
   .footer-social a{
-    width:34px;height:34px;
-    border:1px solid var(--hairline-light);color:rgba(255,255,255,0.7);
+    /* Sin recuadro: el área táctil se mantiene con padding */
+    padding:6px;margin:-6px;
+    color:rgba(255,255,255,0.7);
     display:flex;align-items:center;justify-content:center;
-    transition:border-color .25s ease,color .25s ease;
+    transition:color .25s ease;
   }
-  .footer-social a:hover{border-color:var(--gold);color:var(--gold);}
+  .footer-social a:hover{color:var(--gold);}
 
   /* ---------- MOVIMIENTO ----------
      Solo dos gestos: la entrada de cada bloque al aparecer en pantalla
@@ -419,6 +426,8 @@
 
     /* Cabecera: logo + botón, el menú pasa a pantalla completa */
     .site-header{padding:18px 24px;flex-wrap:nowrap;gap:16px;}
+    /* Marco proporcional a la escala del teléfono */
+    .site-header .logo-block{border-width:1.5px;padding:9px 13px 8px;}
     .logo-block .logo{font-size:1.05rem;letter-spacing:2px;}
     .logo-block .tagline{font-size:0.52rem;letter-spacing:1.5px;}
     .nav-toggle{display:block;}
