@@ -334,6 +334,8 @@
     content:"";width:5px;height:5px;flex-shrink:0;
     background:var(--gold);
   }
+  /* Si el total es impar, la última ficha ocupa el ancho: nunca queda un hueco */
+  .area-points li:last-child:nth-child(odd){grid-column:1 / -1;}
 
   /* ---------- INDUSTRIAS ---------- */
   .industrias{
@@ -758,6 +760,7 @@
               <li>Ley Karin</li>
               <li>Protocolos corporativos</li>
               <li>Auditorías laborales</li>
+              <li>Asesoría preventiva</li>
             </ul>
           </div>
 
