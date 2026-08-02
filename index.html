@@ -918,9 +918,23 @@
     setMenu(!body.classList.contains('menu-open'));
   });
 
-  /* Al elegir una sección el panel se cierra solo */
-  document.querySelectorAll('.site-nav a').forEach(function(a){
-    a.addEventListener('click', function(){ setMenu(false); });
+  /* Al elegir una sección: se cierra el panel y se baja hasta ella sin
+     escribir el ancla en la barra de direcciones */
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll('.site-nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      setMenu(false);
+
+      var top = a.getAttribute('href') === '#inicio'
+        ? 0
+        : target.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
+
+      window.scrollTo({top: Math.max(top, 0), behavior: still.matches ? 'auto' : 'smooth'});
+    });
   });
 
   document.addEventListener('keydown', function(e){
