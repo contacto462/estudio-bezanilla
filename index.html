@@ -262,20 +262,77 @@
     content:"";display:block;width:40px;height:2px;background:var(--gold);
     margin:12px auto 0;
   }
-  .areas-grid{
-    max-width:1180px;margin:50px auto 0;
-    display:grid;grid-template-columns:repeat(4,1fr);gap:36px;
-    text-align:left;
+  /* Esquema: índice a la izquierda, detalle a la derecha */
+  .areas-scheme{
+    max-width:1180px;margin:52px auto 0;text-align:left;
+    display:grid;grid-template-columns:0.82fr 1.18fr;
+    border-top:1px solid var(--hairline);
   }
-  .area-item .icon{width:40px;height:40px;color:var(--gold);margin-bottom:16px;}
-  .area-item h3{
-    font-family:var(--sans);
-    font-size:0.78rem;letter-spacing:0.5px;font-weight:700;
-    text-transform:uppercase;margin-bottom:10px;color:var(--navy);
+  .area-tabs{display:flex;flex-direction:column;border-right:1px solid var(--hairline);}
+  .area-tab{
+    position:relative;
+    display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:baseline;
+    width:100%;padding:24px 34px 24px 22px;
+    background:none;border:0;border-bottom:1px solid var(--hairline);
+    font-family:var(--sans);text-align:left;cursor:pointer;
+    color:var(--text-muted);
+    transition:color .25s ease, background-color .25s ease;
   }
-  .area-item p{
+  .area-tab:last-child{border-bottom:none;}
+  /* Marca de posición: se estira desde arriba, como el indicador del menú */
+  .area-tab::before{
+    content:"";position:absolute;left:0;top:-1px;bottom:-1px;width:2px;
+    background:var(--gold);
+    transform:scaleY(0);transform-origin:top;
+    transition:transform .4s var(--ease-out);
+  }
+  .area-tab .num{
+    font-size:0.66rem;letter-spacing:1.4px;font-weight:600;
+    color:var(--gold);opacity:0.55;transition:opacity .25s ease;
+  }
+  .area-tab .name{
+    font-size:0.82rem;letter-spacing:1.2px;font-weight:600;
+    text-transform:uppercase;line-height:1.35;
+  }
+  .area-tab:hover{color:var(--navy);}
+  .area-tab:active{background-color:rgba(27,42,61,0.04);}
+  .area-tab.is-active{color:var(--navy);}
+  .area-tab.is-active::before{transform:scaleY(1);}
+  .area-tab.is-active .num{opacity:1;}
+
+  .area-panels{padding:34px 0 34px 46px;}
+  .area-panel{display:none;}
+  .area-panel.is-active{display:block;}
+  .js .area-panel.is-active{animation:panelIn .4s var(--ease-out) both;}
+  @keyframes panelIn{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:none;}
+  }
+  .area-panel .icon{width:34px;height:34px;color:var(--gold);margin-bottom:18px;}
+  .area-panel h3{
     font-family:var(--sans);
-    font-size:0.78rem;color:var(--text-muted);line-height:1.6;
+    font-size:0.9rem;letter-spacing:1.2px;font-weight:700;
+    text-transform:uppercase;margin-bottom:12px;color:var(--navy);
+  }
+  .area-panel p{
+    font-family:var(--sans);
+    font-size:0.88rem;color:var(--text-muted);line-height:1.7;max-width:52ch;
+  }
+  /* Los alcances, como una retícula de fichas */
+  .area-points{
+    list-style:none;margin-top:26px;
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:1px;background:var(--hairline);border:1px solid var(--hairline);
+  }
+  .area-points li{
+    background:#fff;padding:15px 16px;
+    font-family:var(--sans);font-size:0.74rem;letter-spacing:0.3px;
+    color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+  }
+  .area-points li::before{
+    content:"";width:5px;height:5px;flex-shrink:0;
+    background:var(--gold);
   }
 
   /* ---------- INDUSTRIAS ---------- */
@@ -384,11 +441,24 @@
   }
 
   @media (hover: hover) and (pointer: fine){
-    .area-item .icon,.industria-item .icon{
+    .industria-item .icon{
       transition:transform .25s var(--ease-out), color .25s ease;
     }
-    .area-item:hover .icon{transform:translateY(-3px);}
     .industria-item:hover .icon{transform:translateY(-3px);color:var(--gold);}
+  }
+
+  /* Traslucidez y contraste: preferencias del sistema */
+  @media (prefers-reduced-transparency: reduce){
+    .site-header.is-scrolled,.site-nav{
+      background-color:var(--navy-deep);
+      -webkit-backdrop-filter:none;backdrop-filter:none;
+    }
+  }
+  @media (prefers-contrast: more){
+    .area-tab{border-bottom-color:rgba(27,42,61,0.4);}
+    .area-points,.area-points li{border-color:rgba(27,42,61,0.4);}
+    .site-nav a{color:#fff;}
+    .value-item p{color:#c3ccd6;}
   }
 
   /* Botón de menú: oculto en escritorio */
@@ -416,7 +486,9 @@
     .value-item:nth-child(odd){padding-left:0;border-left:none;}
     .nosotros-grid{grid-template-columns:1fr;gap:52px;}
     .nosotros-img{margin:0 auto;}
-    .areas-grid{grid-template-columns:1fr 1fr;}
+    .areas-scheme{grid-template-columns:0.9fr 1.1fr;}
+    .area-tab{padding:20px 22px 20px 18px;}
+    .area-panels{padding-left:34px;}
     .industrias-grid{grid-template-columns:repeat(4,1fr);row-gap:32px;}
   }
 
@@ -497,12 +569,19 @@
 
     /* Áreas: una columna con filetes, íconos algo menores */
     .areas{padding:64px 0;}
-    .areas-grid{grid-template-columns:1fr;gap:0;margin-top:36px;}
-    .area-item{
-      padding:28px 0;border-top:1px solid var(--hairline);
-    }
-    .area-item:first-child{border-top:none;padding-top:0;}
-    .area-item .icon{width:32px;height:32px;margin-bottom:12px;}
+    /* El esquema se despliega: sin pestañas, las cuatro áreas apiladas */
+    .areas-scheme{grid-template-columns:1fr;border-top:none;margin-top:34px;}
+    .area-tabs{display:none;}
+    .area-panels{padding:0;}
+    .area-panel,
+    .area-panel.is-active{display:block;animation:none;}
+    .area-panel{padding:28px 0;border-top:1px solid var(--hairline);}
+    .area-panel:first-child{border-top:none;padding-top:0;}
+    .area-panel .icon{width:30px;height:30px;margin-bottom:14px;}
+    .area-panel h3{font-size:0.82rem;}
+    .area-panel p{font-size:0.85rem;}
+    .area-points{grid-template-columns:1fr;margin-top:20px;}
+    .area-points li{padding:13px 14px;font-size:0.72rem;}
 
     /* Industrias */
     .industrias{padding:56px 0;}
@@ -624,27 +703,76 @@
   <section class="areas" id="areas">
     <div class="container">
       <h2 data-reveal>Áreas de práctica</h2>
-      <div class="areas-grid" data-reveal-children>
-        <article class="area-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v18M5 7l-3 6a3 3 0 0 0 6 0l-3-6zm14 0l-3 6a3 3 0 0 0 6 0l-3-6zM3 7h18M8 7l4-4 4 4"/></svg>
-          <h3>Litigación laboral</h3>
-          <p>Representación en procedimientos laborales individuales y colectivos ante tribunales y cortes de justicia.</p>
-        </article>
-        <article class="area-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M10 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/></svg>
-          <h3>Relaciones laborales colectivas</h3>
-          <p>Negociaciones colectivas, relaciones sindicales y estrategias preventivas para la gestión de conflictos.</p>
-        </article>
-        <article class="area-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 3h8l4 4v14H7z"/><path d="M9 12l2 2 4-4"/></svg>
-          <h3>Cumplimiento normativo</h3>
-          <p>Reglamentos internos, investigaciones internas, Ley Karin, protocolos corporativos y auditorías laborales.</p>
-        </article>
-        <article class="area-item">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          <h3>Asesoría corporativa</h3>
-          <p>Apoyo permanente a directorios, gerencias generales y departamentos de recursos humanos.</p>
-        </article>
+      <div class="areas-scheme" data-reveal>
+        <div class="area-tabs" role="tablist" aria-label="Áreas de práctica">
+          <button class="area-tab is-active" type="button" role="tab"
+                  id="tab-litigacion" aria-controls="panel-litigacion" aria-selected="true">
+            <span class="num">01</span><span class="name">Litigación laboral</span>
+          </button>
+          <button class="area-tab" type="button" role="tab" tabindex="-1"
+                  id="tab-colectivas" aria-controls="panel-colectivas" aria-selected="false">
+            <span class="num">02</span><span class="name">Relaciones laborales colectivas</span>
+          </button>
+          <button class="area-tab" type="button" role="tab" tabindex="-1"
+                  id="tab-cumplimiento" aria-controls="panel-cumplimiento" aria-selected="false">
+            <span class="num">03</span><span class="name">Cumplimiento normativo</span>
+          </button>
+          <button class="area-tab" type="button" role="tab" tabindex="-1"
+                  id="tab-corporativa" aria-controls="panel-corporativa" aria-selected="false">
+            <span class="num">04</span><span class="name">Asesoría corporativa</span>
+          </button>
+        </div>
+
+        <div class="area-panels">
+          <div class="area-panel is-active" role="tabpanel" id="panel-litigacion" aria-labelledby="tab-litigacion">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v18M5 7l-3 6a3 3 0 0 0 6 0l-3-6zm14 0l-3 6a3 3 0 0 0 6 0l-3-6zM3 7h18M8 7l4-4 4 4"/></svg>
+            <h3>Litigación laboral</h3>
+            <p>Representación en procedimientos laborales individuales y colectivos ante tribunales y cortes de justicia.</p>
+            <ul class="area-points">
+              <li>Procedimientos individuales</li>
+              <li>Procedimientos colectivos</li>
+              <li>Tribunales laborales</li>
+              <li>Cortes de justicia</li>
+            </ul>
+          </div>
+
+          <div class="area-panel" role="tabpanel" id="panel-colectivas" aria-labelledby="tab-colectivas" hidden>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M10 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/></svg>
+            <h3>Relaciones laborales colectivas</h3>
+            <p>Negociaciones colectivas, relaciones sindicales y estrategias preventivas para la gestión de conflictos.</p>
+            <ul class="area-points">
+              <li>Negociación colectiva</li>
+              <li>Relaciones sindicales</li>
+              <li>Estrategias preventivas</li>
+              <li>Gestión de conflictos</li>
+            </ul>
+          </div>
+
+          <div class="area-panel" role="tabpanel" id="panel-cumplimiento" aria-labelledby="tab-cumplimiento" hidden>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 3h8l4 4v14H7z"/><path d="M9 12l2 2 4-4"/></svg>
+            <h3>Cumplimiento normativo</h3>
+            <p>Reglamentos internos, investigaciones internas, Ley Karin, protocolos corporativos y auditorías laborales.</p>
+            <ul class="area-points">
+              <li>Reglamentos internos</li>
+              <li>Investigaciones internas</li>
+              <li>Ley Karin</li>
+              <li>Protocolos corporativos</li>
+              <li>Auditorías laborales</li>
+            </ul>
+          </div>
+
+          <div class="area-panel" role="tabpanel" id="panel-corporativa" aria-labelledby="tab-corporativa" hidden>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <h3>Asesoría corporativa</h3>
+            <p>Apoyo permanente a directorios, gerencias generales y departamentos de recursos humanos.</p>
+            <ul class="area-points">
+              <li>Directorios</li>
+              <li>Gerencias generales</li>
+              <li>Recursos humanos</li>
+              <li>Acompañamiento permanente</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -727,6 +855,51 @@
   };
   onScroll();
   window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* ---- Áreas de práctica: índice + panel ---- */
+  var tabs = [].slice.call(document.querySelectorAll('.area-tab'));
+  var panels = [].slice.call(document.querySelectorAll('.area-panel'));
+
+  function showArea(i, focus){
+    tabs.forEach(function(tab, n){
+      var on = n === i;
+      tab.classList.toggle('is-active', on);
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.tabIndex = on ? 0 : -1;
+      panels[n].classList.toggle('is-active', on);
+      panels[n].hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  }
+
+  tabs.forEach(function(tab, i){
+    /* En puntero: se responde al presionar, no al soltar */
+    tab.addEventListener('pointerdown', function(){ showArea(i); });
+    tab.addEventListener('click', function(){ showArea(i); });
+    tab.addEventListener('keydown', function(e){
+      var last = tabs.length - 1, next = null;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = i === last ? 0 : i + 1;
+      if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  next = i === 0 ? last : i - 1;
+      if (e.key === 'Home') next = 0;
+      if (e.key === 'End')  next = last;
+      if (next === null) return;
+      e.preventDefault();
+      showArea(next, true);
+    });
+  });
+
+  /* En móvil el esquema se despliega completo: sin paneles ocultos */
+  var wideAreas = window.matchMedia('(min-width: 821px)');
+  function syncAreas(){
+    if (wideAreas.matches){
+      var active = tabs.findIndex(function(t){ return t.classList.contains('is-active'); });
+      showArea(active < 0 ? 0 : active);
+    } else {
+      panels.forEach(function(panel){ panel.hidden = false; });
+    }
+  }
+  syncAreas();
+  wideAreas.addEventListener('change', syncAreas);
 
   /* ---- Menú móvil ---- */
   var toggle = document.querySelector('.nav-toggle');
