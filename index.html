@@ -564,11 +564,19 @@
         rgba(13,30,50,0.86) 78%,
         rgba(17,28,41,0.97) 100%);
     }
-    /* Bajo el texto, no al costado: en vertical no hay ancho para dos columnas */
-    .hero-bottom{flex-direction:column;align-items:flex-start;gap:26px;}
+    /* La bajada a la izquierda y el mapa contra el borde derecho */
+    .hero-bottom{
+      flex-direction:row;align-items:flex-start;
+      justify-content:space-between;gap:18px;
+    }
+    .hero-bottom p{flex:1;min-width:0;}
     .hero-map{margin-top:0;}
-    .hero-map svg{height:min(24vh,210px);}
-    .hero-map-label{left:calc(100% + 14px);font-size:0.6rem;letter-spacing:1.4px;}
+    .hero-map svg{height:min(34vh,300px);}
+    /* La etiqueta se abre hacia adentro: a la derecha se saldría de pantalla */
+    .hero-map-label{
+      left:auto;right:calc(100% + 12px);bottom:6px;
+      font-size:0.6rem;letter-spacing:1.4px;
+    }
     .hero-content h1{
       font-size:clamp(1.7rem,7vw,2.3rem);letter-spacing:-0.01em;
       line-height:1.1;margin-bottom:22px;
