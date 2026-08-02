@@ -159,10 +159,11 @@
 
   /* ---------- MAPA DE CHILE ---------- */
   /* Comparte fila con la bajada: arranca bajo el titular y baja desde ahí */
+  /* La bajada se centra contra la altura del mapa */
   .hero-bottom{
-    display:flex;align-items:flex-start;gap:clamp(30px,4.5vw,72px);
+    display:flex;align-items:center;gap:clamp(30px,4.5vw,72px);
   }
-  .hero-bottom p{margin:0;align-self:flex-start;}
+  .hero-bottom p{margin:0;}
   .hero-map{position:relative;flex-shrink:0;margin-top:-6px;}
   .hero-map svg{
     height:clamp(280px,40vh,420px);width:auto;display:block;
