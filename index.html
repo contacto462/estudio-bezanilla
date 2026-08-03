@@ -11,7 +11,10 @@
 <meta name="theme-color" content="#0b1a2e">
 <meta property="og:type" content="website">
 <meta property="og:image" content="img/hero-main.jpg">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23111c29'/%3E%3Crect x='5' y='5' width='54' height='54' fill='none' stroke='%238a6c2f' stroke-width='4'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' fill='%23c9a24a' text-anchor='middle' letter-spacing='1'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" as="image" href="img/hero-main.jpg" fetchpriority="high">
 <script>document.documentElement.classList.add('js');</script>
 <style>
@@ -166,14 +169,15 @@
   .hero-bottom p{margin:0;}
   .hero-map{position:relative;flex-shrink:0;}
   .hero-map svg{
-    height:clamp(260px,36vh,380px);width:auto;display:block;
+    height:clamp(310px,44vh,470px);width:auto;display:block;
     overflow:visible;
   }
   /* Apagado de base; se encienden al cargar; el bronce marca la apuntada */
   .region{
     fill:#ffffff;fill-opacity:0.07;
     stroke:rgba(255,255,255,0.30);stroke-width:1.4;stroke-linejoin:round;
-    transition:fill-opacity .55s var(--ease-out), fill .25s ease, stroke .25s ease;
+    /* El relleno responde casi al instante; la opacidad es la del encendido */
+    transition:fill-opacity .55s var(--ease-out), fill .12s ease-out, stroke .12s ease-out;
   }
   .region.lit{fill-opacity:0.20;}
   .region.is-hover{
@@ -564,17 +568,17 @@
         rgba(13,30,50,0.86) 78%,
         rgba(17,28,41,0.97) 100%);
     }
-    /* La bajada a la izquierda y el mapa contra el borde derecho */
+    /* El mapa contra el borde izquierdo y la bajada a su derecha.
+       row-reverse invierte el orden visual sin tocar el marcado. */
     .hero-bottom{
-      flex-direction:row;align-items:flex-start;
-      justify-content:space-between;gap:18px;
+      flex-direction:row-reverse;align-items:flex-start;
+      justify-content:space-between;gap:22px;
     }
     .hero-bottom p{flex:1;min-width:0;}
     .hero-map{margin-top:0;}
-    .hero-map svg{height:min(34vh,300px);}
-    /* La etiqueta se abre hacia adentro: a la derecha se saldría de pantalla */
+    .hero-map svg{height:min(38vh,340px);}
     .hero-map-label{
-      left:auto;right:calc(100% + 12px);bottom:6px;
+      left:calc(100% + 12px);right:auto;bottom:6px;
       font-size:0.6rem;letter-spacing:1.4px;
     }
     .hero-content h1{
@@ -988,11 +992,17 @@
     });
 
     /* Se encienden de norte a sur al aparecer en pantalla */
+    var STEP = 60;
     function lightUp(){
       regions.forEach(function(region, i){
-        region.style.transitionDelay = calm ? '0ms' : (i * 60) + 'ms';
+        region.style.transitionDelay = calm ? '0ms' : (i * STEP) + 'ms';
         region.classList.add('lit');
       });
+      /* El retardo era solo para la entrada: si queda puesto, el hover
+         hereda hasta un segundo de espera antes de virar a bronce. */
+      window.setTimeout(function(){
+        regions.forEach(function(region){ region.style.transitionDelay = '0ms'; });
+      }, calm ? 0 : regions.length * STEP + 600);
     }
 
     if (calm || !('IntersectionObserver' in window)){
